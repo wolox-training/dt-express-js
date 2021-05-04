@@ -1,4 +1,7 @@
 'use strict';
+
+const hashHelper = require('../helpers/hash');
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'user',
@@ -10,7 +13,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: 'users',
-      underscored: true
+      underscored: true,
+      hooks: {
+        beforeCreate: async user => {
+          const { password } = user;
+
+          const hashedPassword = await hashHelper.getHashedPassword(password);
+          // eslint-disable-next-line require-atomic-updates
+          user.password = hashedPassword;
+        }
+      }
     }
   );
   return User;
