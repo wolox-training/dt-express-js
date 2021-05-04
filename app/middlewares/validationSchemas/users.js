@@ -19,6 +19,7 @@ exports.createUserSchema = {
     optional: false,
     notEmpty: true,
     errorMessage: errorMessages.providedAndNotEmpty,
+    bail: true,
     isEmail: {
       errorMessage: errorMessages.validEmail,
       bail: true
@@ -39,6 +40,7 @@ exports.createUserSchema = {
     in: 'body',
     optional: false,
     notEmpty: true,
+    bail: true,
     errorMessage: errorMessages.providedAndNotEmpty,
     isLength: {
       options: { min: 8 },
