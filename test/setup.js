@@ -1,5 +1,7 @@
 const models = require('../app/models');
 
+require('./factory/setup');
+
 const tables = Object.values(models.sequelize.models);
 
 const truncateTable = model =>
