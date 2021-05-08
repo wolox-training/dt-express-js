@@ -11,3 +11,6 @@ exports.defaultError = message => internalError(message, exports.DEFAULT_ERROR);
 
 exports.SCHEMA_ERROR = 'schema_error';
 exports.schemaError = message => internalError(message, exports.SCHEMA_ERROR);
+
+exports.BAD_GATEWAY = 'bad_gateway';
+exports.badGatewayError = message => internalError(message, exports.BAD_GATEWAY);
