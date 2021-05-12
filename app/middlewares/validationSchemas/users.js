@@ -1,6 +1,23 @@
 const { user: UserModel } = require('../../models');
 const { errorMessages, regExp } = require('../../constants');
 
+const emailSchema = {
+  in: 'body',
+  optional: false,
+  notEmpty: true,
+  errorMessage: errorMessages.providedAndNotEmpty,
+  bail: true,
+  isEmail: {
+    errorMessage: errorMessages.validEmail,
+    bail: true
+  },
+  matches: {
+    options: regExp.woloxEmail,
+    errorMessage: errorMessages.woloxDomain,
+    bail: true
+  }
+};
+
 exports.createUserSchema = {
   first_name: {
     in: 'body',
@@ -15,20 +32,7 @@ exports.createUserSchema = {
     errorMessage: errorMessages.providedAndNotEmpty
   },
   email: {
-    in: 'body',
-    optional: false,
-    notEmpty: true,
-    errorMessage: errorMessages.providedAndNotEmpty,
-    bail: true,
-    isEmail: {
-      errorMessage: errorMessages.validEmail,
-      bail: true
-    },
-    matches: {
-      options: regExp.woloxEmail,
-      errorMessage: errorMessages.woloxDomain,
-      bail: true
-    },
+    ...emailSchema,
     custom: {
       options: email =>
         UserModel.findOne({ where: { email } }).then(user => {
@@ -49,5 +53,15 @@ exports.createUserSchema = {
     isAlphanumeric: {
       errorMessage: errorMessages.alphanumeric
     }
+  }
+};
+
+exports.signInSchema = {
+  email: emailSchema,
+  password: {
+    in: 'body',
+    optional: false,
+    notEmpty: true,
+    errorMessage: errorMessages.providedAndNotEmpty
   }
 };

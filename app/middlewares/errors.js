@@ -4,10 +4,12 @@ const logger = require('../logger');
 const DEFAULT_STATUS_CODE = 500;
 
 const statusCodes = {
-  [errors.DATABASE_ERROR]: 503,
-  [errors.DEFAULT_ERROR]: 500,
+  [errors.UNAUTHORIZED]: 401,
+  [errors.NOT_FOUND]: 404,
   [errors.SCHEMA_ERROR]: 422,
-  [errors.BAD_GATEWAY]: 502
+  [errors.DEFAULT_ERROR]: 500,
+  [errors.BAD_GATEWAY]: 502,
+  [errors.DATABASE_ERROR]: 503
 };
 
 exports.handle = (error, req, res, next) => {

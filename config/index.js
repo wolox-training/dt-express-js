@@ -47,6 +47,10 @@ const config = {
     },
     services: {
       weetsBaseUrl: process.env.WEETS_BASE_URL
+    },
+    tokens: {
+      tokensSecret: process.env.TOKENS_SECRET,
+      tokensExpiration: process.env.TOKENS_EXPIRATION
     }
   }
 };
