@@ -19,3 +19,8 @@ exports.user = {
   firstName: 'Isaac',
   lastName: 'Newton'
 };
+
+exports.signInRequestBody = {
+  email: exports.user.email,
+  password: exports.user.password
+};

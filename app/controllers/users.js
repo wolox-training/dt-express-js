@@ -12,3 +12,13 @@ exports.createUser = async ({ body }, res, next) => {
     return next(error);
   }
 };
+
+exports.signIn = async ({ body: { email, password } }, res, next) => {
+  try {
+    const tokenInfo = await usersService.signIn(email, password);
+
+    return res.send(tokenInfo);
+  } catch (error) {
+    return next(error);
+  }
+};

@@ -14,3 +14,9 @@ exports.schemaError = message => internalError(message, exports.SCHEMA_ERROR);
 
 exports.BAD_GATEWAY = 'bad_gateway';
 exports.badGatewayError = message => internalError(message, exports.BAD_GATEWAY);
+
+exports.NOT_FOUND = 'not_found';
+exports.notFoundError = message => internalError(message, exports.NOT_FOUND);
+
+exports.UNAUTHORIZED = 'unauthorized';
+exports.unauthorizedError = message => internalError(message, exports.UNAUTHORIZED);

@@ -75,6 +75,7 @@
     "express-validator": "^6.10.1",
     "express-wolox-logger": "^2.0.0",
     "factory-girl": "^5.0.4",
+    "jsonwebtoken": "^8.5.1",
     "jwt-simple": "^0.5.1",
     "pg": "^8.6.0",
     "sequelize": "^6.6.2",
