@@ -1,7 +1,7 @@
 module.exports = {
   '/users': {
     get: {
-      tags: ['CRUD operations'],
+      tags: ['Users'],
       description: 'Get users',
       operationId: 'getUsers',
       parameters: [
@@ -10,42 +10,37 @@ module.exports = {
           in: 'query',
           schema: {
             type: 'integer',
-            default: 1
+            default: 0
+          },
+          required: false
+        },
+        {
+          name: 'size',
+          in: 'query',
+          schema: {
+            type: 'integer',
+            default: 10
           },
           required: false
         }
       ],
       responses: {
         200: {
-          description: 'Users were obtained',
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/Users'
-              }
-            }
-          }
+          $ref: '#/components/responses/paginatedUsers'
         }
       }
     },
     post: {
-      tags: ['CRUD operations'],
+      tags: ['Users'],
       description: 'Create user',
       operationId: 'createUser',
       parameters: [],
       requestBody: {
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/components/schemas/User'
-            }
-          }
-        },
-        required: true
+        $ref: '#/components/requestBodies/createUser'
       },
       responses: {
         200: {
-          description: 'New user was created'
+          $ref: '#/components/responses/userCreated'
         },
         400: {
           description: 'Invalid parameters',
@@ -60,6 +55,22 @@ module.exports = {
               }
             }
           }
+        }
+      }
+    }
+  },
+  '/users/sessions': {
+    post: {
+      tags: ['Users'],
+      description: 'Gets the token to consume endpoints that need authentication',
+      operationId: 'signInUser',
+      parameters: [],
+      requestBody: {
+        $ref: '#/components/requestBodies/signInUser'
+      },
+      responses: {
+        200: {
+          $ref: '#/components/responses/token'
         }
       }
     }

@@ -1,13 +1,16 @@
 const config = require('../config');
 const schemas = require('./schemas');
+const requestBodies = require('./requestBodies');
+const responses = require('./responses');
 const paths = require('./paths');
+const { version } = require('../package.json');
 
 const port = config.common.api.port || 8080;
 
 module.exports = {
   openapi: '3.0.1',
   info: {
-    version: '0.1.0',
+    version,
     title: 'WTraining',
     description: 'WTraining',
     termsOfService: '',
@@ -30,15 +33,24 @@ module.exports = {
       description: 'Testing server'
     }
   ],
-  security: [],
+  security: [{ bearerAuth: [] }],
   tags: [
     {
-      name: 'CRUD operations'
+      name: 'Users',
+      description: 'Operations related to users, such as create users, get users, get user token, etc'
     }
   ],
   paths,
   components: {
+    requestBodies,
+    responses,
     schemas,
-    securitySchemes: {}
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT'
+      }
+    }
   }
 };

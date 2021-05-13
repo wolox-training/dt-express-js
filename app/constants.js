@@ -9,7 +9,7 @@ exports.errorMessages = {
 };
 
 exports.regExp = {
-  woloxEmail: /(\w|\.|-)+@wolox\.(\w{2}|com)$/i
+  woloxEmail: /(\w|\.|-)+@wolox\.(\w{2}|(com(\.\w{2})?))$/i
 };
 
 exports.pagination = {
