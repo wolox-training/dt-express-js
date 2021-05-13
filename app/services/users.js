@@ -2,6 +2,9 @@ const { user: userModel } = require('../models');
 const { databaseError, notFoundError, unauthorizedError } = require('../errors');
 const hashHelper = require('../helpers/hash');
 const jwtHelper = require('../helpers/jwt');
+const {
+  pagination: { defaultPaginationSize, defaultPage }
+} = require('../constants');
 const logger = require('../logger');
 
 exports.createUser = userInfo => {
@@ -36,4 +39,11 @@ exports.signIn = async (email, password) => {
   const token = jwtHelper.getToken({ id, email });
 
   return { token };
+};
+
+exports.getPaginatedUsers = async ({ size = defaultPaginationSize, page = defaultPage }) => {
+  const { count, rows } = await userModel.findAndCountAll({ limit: size, offset: page * size });
+  const users = rows.map(({ dataValues }) => dataValues);
+
+  return { count, size, page, users };
 };
