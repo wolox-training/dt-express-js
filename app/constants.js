@@ -4,9 +4,15 @@ exports.errorMessages = {
   woloxDomain: 'should belong to wolox domain',
   alreadyInRegisters: 'is already in our registers',
   shortPassword: 'should contain at least 8 characters',
-  alphanumeric: 'should be alpha-numeric'
+  alphanumeric: 'should be alpha-numeric',
+  integer: 'should be integer'
 };
 
 exports.regExp = {
   woloxEmail: /(\w|\.|-)+@wolox\.(\w{2}|com)$/i
+};
+
+exports.pagination = {
+  defaultPaginationSize: 10,
+  defaultPage: 0
 };

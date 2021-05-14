@@ -65,3 +65,20 @@ exports.signInSchema = {
     errorMessage: errorMessages.providedAndNotEmpty
   }
 };
+
+exports.getUsersSchema = {
+  size: {
+    in: 'query',
+    optional: true,
+    isInt: true,
+    toInt: true,
+    errorMessage: errorMessages.integer
+  },
+  page: {
+    in: 'query',
+    optional: true,
+    isInt: true,
+    toInt: true,
+    errorMessage: errorMessages.integer
+  }
+};

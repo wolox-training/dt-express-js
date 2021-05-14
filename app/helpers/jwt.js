@@ -8,4 +8,8 @@ const {
   }
 } = config;
 
-exports.getToken = payload => jwt.sign(payload, tokensSecret, { expiresIn: tokensExpiration });
+const options = { expiresIn: tokensExpiration };
+
+exports.getToken = payload => jwt.sign(payload, tokensSecret, options);
+
+exports.verifyToken = token => jwt.verify(token, tokensSecret, options);

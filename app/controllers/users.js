@@ -22,3 +22,13 @@ exports.signIn = async ({ body: { email, password } }, res, next) => {
     return next(error);
   }
 };
+
+exports.getUsers = ({ query }, res, next) =>
+  usersService
+    .getPaginatedUsers(query)
+    .then(({ users, count, page, size }) => {
+      const serializedUsers = usersSerializer.serializeUsers(users);
+
+      return res.send({ users: serializedUsers, count, page, size });
+    })
+    .catch(next);
