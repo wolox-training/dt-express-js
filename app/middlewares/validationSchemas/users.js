@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 const { user: UserModel } = require('../../models');
 const { errorMessages, regExp } = require('../../constants');
 
@@ -54,6 +56,11 @@ exports.createUserSchema = {
       errorMessage: errorMessages.alphanumeric
     }
   }
+};
+
+exports.upsertAdminSchema = {
+  ...exports.createUserSchema,
+  email: _.omit(exports.createUserSchema.email, 'custom')
 };
 
 exports.signInSchema = {

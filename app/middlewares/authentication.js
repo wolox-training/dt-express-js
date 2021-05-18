@@ -1,7 +1,7 @@
-const { unauthorizedError } = require('../errors');
+const { unauthorizedError, forbiddenError, FORBIDDEN } = require('../errors');
 const jwtHelper = require('../helpers/jwt');
 
-exports.authUser = (req, res, next) => {
+exports.authUser = (roles = []) => (req, res, next) => {
   const {
     headers: { authorization }
   } = req;
@@ -10,10 +10,17 @@ exports.authUser = (req, res, next) => {
 
   try {
     const token = authorization.replace('bearer ', '');
-    const { id, email } = jwtHelper.verifyToken(token);
+    const { id, roleCode, email } = jwtHelper.verifyToken(token);
 
-    req.user = { id, email };
+    if (roles.length && !roles.includes(roleCode)) {
+      throw forbiddenError("User doesn't have permissions to execute this action");
+    }
+
+    req.user = { id, email, roleCode };
   } catch (error) {
+    const { internalCode } = error;
+    if (internalCode === FORBIDDEN) throw error;
+
     throw unauthorizedError('An error ocurred while trying to retrieve token info');
   }
 

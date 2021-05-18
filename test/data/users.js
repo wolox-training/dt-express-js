@@ -26,10 +26,16 @@ exports.users = [
   { firstName: 'Alan', lastName: 'Turin', email: 'alan.turin@wolox.com', password: 'password' }
 ];
 
-exports.expectedUsersInfo = exports.users.map(user => {
-  const { firstName, lastName, ...restUser } = user;
-  return { ..._.omit(restUser, 'password'), first_name: firstName, last_name: lastName };
-});
+exports.getExpectedUsersInfo = roleId =>
+  exports.users.map(user => {
+    const { firstName, lastName, ...restUser } = user;
+    return {
+      ..._.omit(restUser, 'password'),
+      first_name: firstName,
+      last_name: lastName,
+      role_id: roleId
+    };
+  });
 
 exports.signInRequestBody = {
   email: exports.user.email,

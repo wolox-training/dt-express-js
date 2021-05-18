@@ -20,3 +20,6 @@ exports.notFoundError = message => internalError(message, exports.NOT_FOUND);
 
 exports.UNAUTHORIZED = 'unauthorized';
 exports.unauthorizedError = message => internalError(message, exports.UNAUTHORIZED);
+
+exports.FORBIDDEN = 'forbidden';
+exports.forbiddenError = message => internalError(message, exports.FORBIDDEN);

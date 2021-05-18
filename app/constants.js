@@ -16,3 +16,10 @@ exports.pagination = {
   defaultPaginationSize: 10,
   defaultPage: 0
 };
+
+exports.roles = {
+  codes: {
+    reg: 'reg',
+    admin: 'admin'
+  }
+};

@@ -1,27 +1,18 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) =>
-    queryInterface.createTable('users', {
+    queryInterface.createTable('roles', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      first_name: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      last_name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      email: {
-        unique: true,
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      password: {
+      code: {
         type: Sequelize.STRING,
         allowNull: false
       },
@@ -36,5 +27,5 @@ module.exports = {
         defaultValue: Sequelize.NOW
       }
     }),
-  down: queryInterface => queryInterface.dropTable('users')
+  down: queryInterface => queryInterface.dropTable('roles')
 };
