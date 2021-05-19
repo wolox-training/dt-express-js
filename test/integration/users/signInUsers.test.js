@@ -2,6 +2,7 @@ const supertest = require('supertest');
 const { factory } = require('factory-girl');
 
 const usersTestData = require('../../data/users');
+const rolesTestData = require('../../data/roles');
 const app = require('../../../app');
 const { errorMessages } = require('../../../app/constants');
 
@@ -14,7 +15,8 @@ const signInPath = '/users/sessions';
 
 describe('Signs in users POST /users/sessions', () => {
   beforeEach(async () => {
-    await factory.create('user', usersTestData.user);
+    const { id: roleId } = await factory.create('role', rolesTestData.regRole);
+    await factory.create('user', { ...usersTestData.user, roleId });
   });
 
   describe('Should work correctly with the satisfactory case', () => {

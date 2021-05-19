@@ -3,6 +3,7 @@ const { factory } = require('factory-girl');
 const _ = require('lodash');
 
 const usersTestData = require('../../data/users');
+const rolesTestData = require('../../data/roles');
 const app = require('../../../app');
 
 const defaultHeaders = ['Accept', 'application/json'];
@@ -14,11 +15,17 @@ const schemaErrorStatus = 422;
 const usersPath = '/users';
 const signInPath = '/users/sessions';
 
-describe.only('Get users GET /users', () => {
+describe('Get users GET /users', () => {
   let token = '';
+  let regRoleId = '';
 
   beforeEach(async () => {
-    await factory.createMany('user', 3, usersTestData.users);
+    ({ id: regRoleId } = await factory.create('role', rolesTestData.regRole));
+    await factory.createMany(
+      'user',
+      3,
+      usersTestData.users.map(user => ({ ...user, roleId: regRoleId }))
+    );
     ({
       body: { token }
     } = await supertest(app)
@@ -50,8 +57,9 @@ describe.only('Get users GET /users', () => {
       const { users } = body;
 
       const cleanedUsers = users.map(user => _.omit(user, [...timeStamps, 'id']));
+      const expectedUsersInfo = usersTestData.getExpectedUsersInfo(regRoleId).sort(sortFunc);
 
-      expect(cleanedUsers.sort(sortFunc)).toStrictEqual(usersTestData.expectedUsersInfo.sort(sortFunc));
+      expect(cleanedUsers.sort(sortFunc)).toStrictEqual(expectedUsersInfo);
     });
   });
 

@@ -32,3 +32,9 @@ exports.getUsers = ({ query }, res, next) =>
       return res.send({ users: serializedUsers, count, page, size });
     })
     .catch(next);
+
+exports.upsertAdmin = ({ body }, res, next) =>
+  usersService
+    .upsertAdmin(usersMapper.mapUser(body))
+    .then(admin => res.send(usersSerializer.serializeUser(admin)))
+    .catch(next);
