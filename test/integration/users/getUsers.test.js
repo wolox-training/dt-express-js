@@ -17,7 +17,7 @@ const signInPath = '/users/sessions';
 
 describe('Get users GET /users', () => {
   let token = '';
-  let regRoleId = '';
+  let regRoleId = 0;
 
   beforeEach(async () => {
     ({ id: regRoleId } = await factory.create('role', rolesTestData.regRole));

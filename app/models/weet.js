@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: 'weets',
-      underscored: true
+      underscored: true,
+      updatedAt: false
     }
   );
 
