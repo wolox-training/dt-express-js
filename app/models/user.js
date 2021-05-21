@@ -49,6 +49,11 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'restrict',
       foreignKey: 'roleId'
     });
+
+    User.hasMany(models.weet, {
+      foreignKey: 'userId',
+      as: 'weets'
+    });
   };
 
   return User;
