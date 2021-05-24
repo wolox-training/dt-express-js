@@ -22,4 +22,5 @@ exports.init = app => {
   app.get('/users', authUser(), validateSchema(paginationQuerySchema), usersController.getUsers);
   app.post('/admin/users', authUser([admin]), validateSchema(upsertAdminSchema), usersController.upsertAdmin);
   app.post('/weets', authUser([reg]), weetsController.createWeet);
+  app.get('/weets', authUser([reg]), validateSchema(paginationQuerySchema), weetsController.getWeets);
 };

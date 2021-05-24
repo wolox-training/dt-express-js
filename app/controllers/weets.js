@@ -11,3 +11,13 @@ exports.createWeet = async ({ user: { id: userId } }, res, next) => {
     return next(error);
   }
 };
+
+exports.getWeets = ({ query }, res, next) =>
+  weetsService
+    .getPaginatedWeets(query)
+    .then(({ weets, count, page, size }) => {
+      const serializedWeets = weetsSerializer.serializeWeets(weets);
+
+      return res.send({ weets: serializedWeets, count, page, size });
+    })
+    .catch(next);
