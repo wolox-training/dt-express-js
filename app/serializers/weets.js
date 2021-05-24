@@ -8,3 +8,5 @@ exports.serializeWeet = weet => {
     ...restWeet
   };
 };
+
+exports.serializeWeets = weets => weets.map(weet => exports.serializeWeet(weet));
