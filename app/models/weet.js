@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'cascade',
       foreignKey: 'userId'
     });
+
+    Weet.belongsToMany(models.user, {
+      through: 'rating'
+    });
   };
 
   return Weet;
