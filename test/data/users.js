@@ -7,7 +7,7 @@ exports.createUserRequestBody = {
   password: 'iInventedGravity'
 };
 
-exports.expectedUserInfo = _.omit(this.createUserRequestBody, 'password');
+exports.expectedUserInfo = { ..._.omit(this.createUserRequestBody, 'password'), token_limit_timestamp: null };
 
 exports.getSchemaErrorResponse = errors => ({
   internal_code: 'schema_error',
@@ -33,7 +33,8 @@ exports.getExpectedUsersInfo = roleId =>
       ..._.omit(restUser, 'password'),
       first_name: firstName,
       last_name: lastName,
-      role_id: roleId
+      role_id: roleId,
+      token_limit_timestamp: null
     };
   });
 

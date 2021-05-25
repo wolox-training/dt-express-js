@@ -1,5 +1,6 @@
 const { user: userModel, role: roleModel } = require('../models');
-const { notFoundError, unauthorizedError } = require('../errors');
+const { notFoundError, unauthorizedError, databaseError } = require('../errors');
+const timeHelper = require('../helpers/time');
 const hashHelper = require('../helpers/hash');
 const jwtHelper = require('../helpers/jwt');
 const {
@@ -59,7 +60,7 @@ exports.signIn = async (email, password) => {
     role: { code: roleCode }
   } = user;
 
-  const token = jwtHelper.getToken({ id, email, roleCode });
+  const token = jwtHelper.getToken({ id, email, roleCode, tokenCreatedAt: timeHelper.getTime() });
 
   return { token };
 };
@@ -70,3 +71,10 @@ exports.getPaginatedUsers = async ({ size = defaultPaginationSize, page = defaul
 
   return { count, size, page, users };
 };
+
+exports.invalidateSessions = userId =>
+  userModel.update({ tokenLimitTimestamp: timeHelper.getTime() }, { where: { id: userId } }).catch(error => {
+    logger.error(error);
+
+    throw databaseError('An error ocurred while trying to close sessions');
+  });

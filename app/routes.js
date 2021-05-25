@@ -19,6 +19,7 @@ exports.init = app => {
   app.get('/health', healthCheck);
   app.post('/users', validateSchema(createUserSchema), usersController.createUser);
   app.post('/users/sessions', validateSchema(signInSchema), usersController.signIn);
+  app.post('/users/sessions/invalidate_all', authUser(), usersController.invalidateSessions);
   app.get('/users', authUser(), validateSchema(paginationQuerySchema), usersController.getUsers);
   app.post('/admin/users', authUser([admin]), validateSchema(upsertAdminSchema), usersController.upsertAdmin);
   app.post('/weets', authUser([reg]), weetsController.createWeet);

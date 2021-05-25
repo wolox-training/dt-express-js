@@ -38,3 +38,14 @@ exports.upsertAdmin = ({ body }, res, next) =>
     .upsertAdmin(usersMapper.mapUser(body))
     .then(admin => res.send(usersSerializer.serializeUser(admin)))
     .catch(next);
+
+exports.invalidateSessions = (req, res, next) => {
+  const {
+    user: { id: userId }
+  } = req;
+
+  return usersService
+    .invalidateSessions(userId)
+    .then(() => res.send())
+    .catch(next);
+};
