@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) =>
-    queryInterface.createTable('ratings', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('ratings', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -41,6 +41,12 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
       }
-    }),
+    });
+
+    return queryInterface.addConstraint('ratings', {
+      fields: ['user_id', 'weet_id'],
+      type: 'unique'
+    });
+  },
   down: queryInterface => queryInterface.dropTable('ratings')
 };

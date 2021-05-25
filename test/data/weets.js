@@ -7,4 +7,6 @@ exports.expectedCreatedWeet = {
 
 exports.weets = [...Array(5).keys()].map(index => ({ content: `test joke ${index}` }));
 
+exports.weet = exports.weets[0];
+
 exports.getExpectedWeetsInfo = userId => exports.weets.map(weet => ({ ...weet, user_id: userId }));

@@ -5,7 +5,9 @@ exports.errorMessages = {
   alreadyInRegisters: 'is already in our registers',
   shortPassword: 'should contain at least 8 characters',
   alphanumeric: 'should be alpha-numeric',
-  integer: 'should be integer'
+  integer: 'should be integer',
+  boolean: 'should be boolean',
+  notFound: 'not found in our registers'
 };
 
 exports.regExp = {
