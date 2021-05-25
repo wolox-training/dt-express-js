@@ -1,5 +1,7 @@
 const { unauthorizedError, forbiddenError, FORBIDDEN } = require('../errors');
 const jwtHelper = require('../helpers/jwt');
+const timeHelper = require('../helpers/time');
+const { user: UserModel } = require('../models');
 
 exports.authUser = (roles = []) => (req, res, next) => {
   const {
@@ -8,15 +10,19 @@ exports.authUser = (roles = []) => (req, res, next) => {
 
   if (!authorization) throw unauthorizedError('Unauthorized');
 
+  const token = authorization.replace('bearer ', '');
+
+  let id = 0;
+  let roleCode = '';
+  let email = '';
+  let tokenCreatedAt = '';
+
   try {
-    const token = authorization.replace('bearer ', '');
-    const { id, roleCode, email } = jwtHelper.verifyToken(token);
+    ({ id, roleCode, email, tokenCreatedAt } = jwtHelper.verifyToken(token));
 
     if (roles.length && !roles.includes(roleCode)) {
       throw forbiddenError("User doesn't have permissions to execute this action");
     }
-
-    req.user = { id, email, roleCode };
   } catch (error) {
     const { internalCode } = error;
     if (internalCode === FORBIDDEN) throw error;
@@ -24,5 +30,17 @@ exports.authUser = (roles = []) => (req, res, next) => {
     throw unauthorizedError('An error ocurred while trying to retrieve token info');
   }
 
-  return next();
+  return UserModel.findOne({ where: { id } })
+    .then(user => {
+      const { tokenLimitTimestamp } = user.toJSON();
+
+      if (tokenLimitTimestamp && timeHelper.isGreater(tokenLimitTimestamp, tokenCreatedAt)) {
+        throw unauthorizedError('This token already expired');
+      }
+
+      req.user = { id, email, roleCode };
+
+      return next();
+    })
+    .catch(next);
 };

@@ -1,5 +1,5 @@
 exports.serializeUser = user => {
-  const { firstName, lastName, createdAt, updatedAt, roleId, ...restUser } = user;
+  const { firstName, lastName, createdAt, updatedAt, roleId, tokenLimitTimestamp, ...restUser } = user;
   delete restUser.password;
 
   return {
@@ -8,6 +8,7 @@ exports.serializeUser = user => {
     created_at: createdAt,
     updated_at: updatedAt,
     role_id: roleId,
+    token_limit_timestamp: tokenLimitTimestamp,
     ...restUser
   };
 };
