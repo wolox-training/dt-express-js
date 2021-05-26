@@ -30,10 +30,8 @@ exports.authUser = (roles = []) => (req, res, next) => {
     throw unauthorizedError('An error ocurred while trying to retrieve token info');
   }
 
-  return UserModel.findOne({ where: { id } })
-    .then(user => {
-      const { tokenLimitTimestamp } = user.toJSON();
-
+  return UserModel.findOne({ where: { id }, raw: true })
+    .then(({ tokenLimitTimestamp }) => {
       if (tokenLimitTimestamp && timeHelper.isGreater(tokenLimitTimestamp, tokenCreatedAt)) {
         throw unauthorizedError('This token already expired');
       }

@@ -30,5 +30,14 @@ exports.emails = {
   userCreated: {
     subject: 'User successfully signed up',
     message: 'A new user was successfully signed up with this email in Wolox weeter'
+  },
+  congratulations: {
+    subject: 'Congratulations Weeter',
+    message:
+      'You are one of our most representative weeters, thank you for being part of our family.\n\nKeep weeting'
   }
+};
+
+exports.cronExpresions = {
+  everyMidnight: '0 0 0 * * *'
 };
