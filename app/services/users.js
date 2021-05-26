@@ -1,15 +1,17 @@
+const logger = require('../logger');
 const { user: userModel, role: roleModel } = require('../models');
 const { notFoundError, unauthorizedError, databaseError } = require('../errors');
 const timeHelper = require('../helpers/time');
 const hashHelper = require('../helpers/hash');
 const jwtHelper = require('../helpers/jwt');
+const emailHelper = require('../helpers/email');
 const {
   pagination: { defaultPaginationSize, defaultPage },
   roles: {
     codes: { admin: adminRoleCode, reg: regRoleCode }
-  }
+  },
+  emails: { userCreated }
 } = require('../constants');
-const logger = require('../logger');
 
 exports.createUser = async (userInfo, roleCode = regRoleCode) => {
   const { email } = userInfo;
@@ -17,6 +19,10 @@ exports.createUser = async (userInfo, roleCode = regRoleCode) => {
   const userInfoWithRole = { ...userInfo, roleId };
 
   const createdUser = (await userModel.create(userInfoWithRole)).toJSON();
+
+  emailHelper.sendMail(email, userCreated.subject, userCreated.message).catch(error => {
+    logger.error(error);
+  });
 
   logger.info('user with email', email, 'successfully created');
 

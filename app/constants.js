@@ -25,3 +25,10 @@ exports.roles = {
     admin: 'admin'
   }
 };
+
+exports.emails = {
+  userCreated: {
+    subject: 'User successfully signed up',
+    message: 'A new user was successfully signed up with this email in Wolox weeter'
+  }
+};
