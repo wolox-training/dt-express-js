@@ -1,11 +1,16 @@
 const usersService = require('../services/users');
 const usersMapper = require('../mappers/users');
 const usersSerializer = require('../serializers/users');
+const emailHelper = require('../helpers/email');
+const {
+  emails: { userCreated }
+} = require('../constants');
 
-exports.createUser = async ({ body }, res, next) => {
+exports.createUser = async ({ body, body: { email } }, res, next) => {
   try {
     const userInfo = usersMapper.mapUser(body);
     const createdUser = await usersService.createUser(userInfo);
+    emailHelper.sendMail(email, userCreated.subject, userCreated.message);
 
     return res.status(201).send(usersSerializer.serializeUser(createdUser));
   } catch (error) {

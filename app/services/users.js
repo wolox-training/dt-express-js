@@ -1,15 +1,16 @@
+const logger = require('../logger');
 const { user: userModel, role: roleModel } = require('../models');
 const { notFoundError, unauthorizedError, databaseError } = require('../errors');
 const timeHelper = require('../helpers/time');
 const hashHelper = require('../helpers/hash');
 const jwtHelper = require('../helpers/jwt');
+
 const {
   pagination: { defaultPaginationSize, defaultPage },
   roles: {
     codes: { admin: adminRoleCode, reg: regRoleCode }
   }
 } = require('../constants');
-const logger = require('../logger');
 
 exports.createUser = async (userInfo, roleCode = regRoleCode) => {
   const { email } = userInfo;

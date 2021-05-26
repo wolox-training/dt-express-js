@@ -1,12 +1,19 @@
 const supertest = require('supertest');
 const { factory } = require('factory-girl');
 const _ = require('lodash');
-
 const dbHelper = require('../../helpers/db');
 const usersTestData = require('../../data/users');
 const rolesTestData = require('../../data/roles');
 const app = require('../../../app');
 const { errorMessages } = require('../../../app/constants');
+const emailHelper = require('../../../app/helpers/email');
+const {
+  emails: {
+    userCreated: { subject: userCreatedSubject, message: userCreatedMessage }
+  }
+} = require('../../../app/constants');
+
+jest.mock('../../../app/helpers/email');
 
 describe('Create users test', () => {
   let status = 0;
@@ -16,11 +23,13 @@ describe('Create users test', () => {
   const timeStamps = ['created_at', 'updated_at'];
   let regRoleId = '';
 
-  beforeEach(async () => ({ id: regRoleId } = await factory.create('role', rolesTestData.regRole)));
+  beforeEach(async () => {
+    ({ id: regRoleId } = await factory.create('role', rolesTestData.regRole));
+    emailHelper.sendMail.mockImplementation(() => Promise.resolve());
+  });
 
   describe('Create users POST  /users', () => {
     const usersPath = '/users';
-
     describe('Should work correctly with satisfactory case', () => {
       beforeEach(async () => {
         ({ status, body } = await supertest(app)
@@ -32,13 +41,16 @@ describe('Create users test', () => {
       test('Should return a created status code', () => {
         expect(status).toBe(201);
       });
-
       test('Should return the created user info without password', () => {
         const userInfo = _.omit(body, [...timeStamps, 'id']);
 
         expect(userInfo).toMatchObject({ ...usersTestData.expectedUserInfo, role_id: regRoleId });
       });
+      test('Should send a notification email', () => {
+        const { email } = usersTestData.createUserRequestBody;
 
+        expect(emailHelper.sendMail).toHaveBeenCalledWith(email, userCreatedSubject, userCreatedMessage);
+      });
       test('Should save the user with the correct information', async () => {
         const { id } = body;
         const foundUser = await dbHelper.findUserById(id);
@@ -69,7 +81,6 @@ describe('Create users test', () => {
           ])
         );
       });
-
       test('Should return the correct error when the provided password is not alphanumeric', async () => {
         const notAlphanumericPassword = '@#¢∞¬¬÷“”“∞';
         ({ status, body } = await supertest(app)
@@ -88,7 +99,6 @@ describe('Create users test', () => {
           ])
         );
       });
-
       test.each(['first_name', 'last_name', 'email', 'password'])(
         'Should return the correct error when %s is not provided',
         async obligatoryField => {
@@ -109,7 +119,6 @@ describe('Create users test', () => {
           );
         }
       );
-
       test('Should return the correct error when the email is already in our records', async () => {
         await factory.create('user', { ...usersTestData.user, roleId: regRoleId });
         const { email } = usersTestData.user;
@@ -162,7 +171,6 @@ describe('Create users test', () => {
       test('Should return a success status code', () => {
         expect(status).toBe(200);
       });
-
       test('Should return the created user info without password', () => {
         const userInfo = _.omit(body, [...timeStamps, 'id']);
 
@@ -171,7 +179,6 @@ describe('Create users test', () => {
           role_id: adminRoleId
         });
       });
-
       test('Should save the user with the correct information', async () => {
         const { id } = body;
 
@@ -200,7 +207,6 @@ describe('Create users test', () => {
       test('Should return a success status code', () => {
         expect(status).toBe(200);
       });
-
       test('Should return the created user info without password', () => {
         const userInfo = _.omit(body, [...timeStamps, 'id']);
         expect(userInfo).toMatchObject({
@@ -209,7 +215,6 @@ describe('Create users test', () => {
           email: newAdminEmail
         });
       });
-
       test('Should save the user with the correct information', async () => {
         const { id } = body;
 
@@ -248,7 +253,6 @@ describe('Create users test', () => {
           ])
         );
       });
-
       test('Should return the correct error when the provided password is not alphanumeric', async () => {
         const notAlphanumericPassword = '@#¢∞¬¬÷“”“∞';
 
@@ -269,7 +273,6 @@ describe('Create users test', () => {
           ])
         );
       });
-
       test.each(['first_name', 'last_name', 'email', 'password'])(
         'Should return the correct error when %s is not provided',
         async obligatoryField => {
