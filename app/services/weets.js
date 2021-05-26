@@ -32,8 +32,11 @@ exports.createWeet = (userId, content) =>
     });
 
 exports.getPaginatedWeets = async ({ size = defaultPaginationSize, page = defaultPage }) => {
-  const { count, rows } = await weetModel.findAndCountAll({ limit: size, offset: page * size });
-  const weets = rows.map(weet => weet.toJSON());
+  const { count, rows: weets } = await weetModel.findAndCountAll({
+    limit: size,
+    offset: page * size,
+    raw: true
+  });
 
   return { count, size, page, weets };
 };

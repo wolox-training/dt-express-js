@@ -10,12 +10,12 @@ const {
   roles: {
     codes: { admin: adminRoleCode, reg: regRoleCode }
   },
-  emails: { userCreated }
+  emails: { userCreated, congratulations }
 } = require('../constants');
 
 exports.createUser = async (userInfo, roleCode = regRoleCode) => {
   const { email } = userInfo;
-  const { id: roleId } = (await roleModel.findOne({ where: { code: roleCode } })).toJSON();
+  const { id: roleId } = await roleModel.findOne({ where: { code: roleCode }, raw: true });
   const userInfoWithRole = { ...userInfo, roleId };
 
   const createdUser = (await userModel.create(userInfoWithRole)).toJSON();
@@ -44,11 +44,12 @@ exports.upsertAdmin = async userInfo => {
     await userModel.update(userInfoWithRole, {
       where: { email },
       returning: true,
-      individualHooks: true
+      individualHooks: true,
+      raw: true
     })
   )[1];
 
-  return updatedUser.toJSON();
+  return updatedUser;
 };
 
 exports.signIn = async (email, password) => {
@@ -72,8 +73,11 @@ exports.signIn = async (email, password) => {
 };
 
 exports.getPaginatedUsers = async ({ size = defaultPaginationSize, page = defaultPage }) => {
-  const { count, rows } = await userModel.findAndCountAll({ limit: size, offset: page * size });
-  const users = rows.map(user => user.toJSON());
+  const { count, rows: users } = await userModel.findAndCountAll({
+    limit: size,
+    offset: page * size,
+    raw: true
+  });
 
   return { count, size, page, users };
 };
@@ -84,3 +88,11 @@ exports.invalidateSessions = userId =>
 
     throw databaseError('An error ocurred while trying to close sessions');
   });
+
+exports.sendCongratulationsEmails = async () => {
+  const userEmails = (await userModel.findAll({ attributes: ['email'], raw: true })).map(
+    ({ email }) => email
+  );
+
+  return emailHelper.sendMail(userEmails, congratulations.subject, congratulations.message);
+};

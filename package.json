@@ -71,6 +71,7 @@
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
+    "cron": "^1.8.2",
     "express": "^4.16.2",
     "express-validator": "^6.10.1",
     "express-wolox-logger": "^2.0.0",
